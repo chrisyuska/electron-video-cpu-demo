@@ -25,7 +25,7 @@ function createAppWindow () {
     width: 1280,
     height: 720,
     show: hideAfter,
-    autoHideMenuBar: false
+    autoHideMenuBar: true
   });
 
   // Watch for pid information being sent from mainWindow and start tracking
