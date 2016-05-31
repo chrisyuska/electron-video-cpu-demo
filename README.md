@@ -13,7 +13,7 @@ This seems to be related to drawing with the CPU/GPU and Chromium not knowing th
 2. Take note of CPU/GPU usage in console once average balances out.
   * **Note:** If your computer has dedicated graphics, you will have to run other software to monitor your graphics processor usage.
 3. Using the tray menu, click `Show application window` and then click `Hide application window`.
-  * The tray menu will have the ![Icon](/assets/Icon_Video.png) icon and live in your task bar.
+  * The tray menu will have the ![Icon](/assets/Icon_Video_small.png) icon and live in your task bar.
 4. Take note of new CPU/GPU usage in console once average balances out again (it should be ~50% lower than in step 3).
   * **Note:** If your computer has dedicated graphics, you will have to run other software to monitor your graphics processor usage.
 
