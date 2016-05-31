@@ -1,6 +1,6 @@
 {
   "name": "electron-video-cpu-demo",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A small Electron app that demonstrates high cpu usage when playing video in hidden window until the window is shown and then hidden again",
   "main": "main.js",
   "scripts": {
