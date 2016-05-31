@@ -13,6 +13,7 @@ let usages = [];
 
 function createAppWindow () {
   var hideAfter = process.argv.indexOf('hide-after') >= 0;
+  var showImmediately = process.argv.indexOf('show') >= 0;
 
   if (hideAfter) {
     console.log('Starting application and then hiding');
@@ -24,7 +25,7 @@ function createAppWindow () {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
-    show: hideAfter,
+    show: hideAfter || showImmediately,
     autoHideMenuBar: true
   });
 
