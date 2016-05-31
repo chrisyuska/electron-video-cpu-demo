@@ -1,29 +1,37 @@
-# Electron Video CPU Demo
+# Electron Video GPU/CPU Bug Demo
 
-This is a small Electron app that demonstrates high(er) CPU/GPU usage when playing video in a hidden window until the window is shown and then hidden again.
+This is a small Electron app that demonstrates high(er) GPU/CPU usage when playing video in a hidden window until the window is shown and then hidden again.
 
-This issue was discovered while creating an Electron app that does video processing on several videos at once.  Each video playing in an always-hidden window seems to result in 50-100% more CPU/GPU usage on the machines tested when compared to hiding windows after initialization.
 
-This seems to be related to drawing with the CPU/GPU and Chromium not knowing the window is hidden/invisible.  This will affect the CPU usage if the computer uses embedded graphics or the GPU usage if the computer has a dedicated graphics card.
+## The problem:
+
+Animated elements (video tags, img tags with animated sources, etc.) in Electron BrowserWindows still tax the GPU (or CPU if graphics are embedded) when the BrowserWindow is initialized with the `{show: false}` option.
+
+This issue was discovered while creating an Electron app that does video processing on several videos at once.  This can result in several times higher GPU/CPU usage when the animated elements are larger in resolution or higher in frame rate.
+
 
 ## How to reproduce:
 
+### Notes:
+
+* **Note:** If your computer uses a dedicated graphics card, you will have to monitor your graphics processor usage with other software such as AMD Catalyst Software or NVIDIA Control Panel.
+* **Note:** If using Windows, you will also need to run `wmic.exe` as the CPU usage calculation relies on it.
+
+### Steps:
+
 1. Install and run electron app with `npm install && npm start`
-  * **Note:** If running in Windows, you will also have to run `wmic.exe` as the CPU usage calculation relies on it.
-2. Take note of CPU/GPU usage in console once average balances out.
-  * **Note:** If your computer has dedicated graphics, you will have to run other software to monitor your graphics processor usage.
-3. Using the tray menu, click `Show application window` and then click `Hide application window`.
-  * The tray menu will have the ![Icon](/assets/Icon_Video_small.png) icon and live in your task bar.
-4. Take note of new CPU/GPU usage in console once average balances out again (it should be ~50% lower than in step 3).
-  * **Note:** If your computer has dedicated graphics, you will have to run other software to monitor your graphics processor usage.
+2. Take note of the GPU/CPU usage in the console once the average levels out.
+3. Using the application's tray menu, click `Show application window` and then click `Hide application window`.
+  * **Note:** The tray menu will have the ![Icon](/assets/Icon_Video_tiny.png) icon and live in your task bar.
+4. Take note of the new GPU/CPU usage in the console once the average levels out again (it should be noticeably lower than in step 3).
 
-## Workaround for CPU usage issue
 
-It appears that calling `hide()` immediately after initializing the window results in the expected lower CPU usage.
+## Workaround
 
-This can be verified by running this electron app with `npm install && npm start hide-after`.
+Calling `hide()` immediately after initializing the window appears to result in the expected lower GPU/CPU usage.  This can be verified by running this electron app with `npm install && npm start hide-after`.
 
 Unfortunately, this can be sort of janky with windows momentarily appearing and then disappearing, especially when created dynamically.
+
 
 ## Tested with:
 
