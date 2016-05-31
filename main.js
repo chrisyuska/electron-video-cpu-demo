@@ -62,9 +62,9 @@ function getCPUUsage() {
 }
 
 // Calculate new running average and return rounded result
-function average(usage) {
-  if (usage) {
-    usages.push(usage / numCPUs)
+function average(newUsage) {
+  if (newUsage) {
+    usages.push(newUsage / numCPUs)
     // limit average to last 20 recordings
     usages = usages.slice(-20);
   }
