@@ -33,6 +33,7 @@ function createAppWindow () {
   ipcMain.on('set-pid', function(ev, newPid) {
     pid = newPid;
 
+    console.log('Calculating average CPU usage...');
     setInterval(getCPUUsage, 1000);
   });
 
