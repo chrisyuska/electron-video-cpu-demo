@@ -50,7 +50,7 @@ function getCPUUsage() {
 
 // Calculate new running average and return rounded result
 function average(newUsage) {
-  if (newUsage) {
+  if (typeof newUsage != 'undefined') {
     usages.push(newUsage)
     // limit average to last 20 recordings
     usages = usages.slice(-20);
