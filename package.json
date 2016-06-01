@@ -1,6 +1,6 @@
 {
   "name": "electron-video-gpu-cpu-bug-demo",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A small Electron app that demonstrates a bug where GPU/CPU usage is unexpectedly high when playing video in a hidden window until the window is shown and then hidden again",
   "main": "main.js",
   "scripts": {
