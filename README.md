@@ -1,21 +1,21 @@
 # Electron Video GPU/CPU Bug Demo
 
-This is a small Electron app that demonstrates a bug where GPU/CPU usage is unexpectedly high when playing video in a hidden window until the window is shown and then hidden again. Example:
+This is a small Electron app that demonstrates a bug where GPU/CPU usage is unexpectedly high when playing video in a hidden window until the window is shown and then hidden again. Example (usage will vary):
 
 ```node
-  win = new BrowserWindow({
-    show: false,
-  });
+win = new BrowserWindow({
+  show: false,
+});
 
-  // GPU usage: 25% (even though window is hidden)
+// GPU usage: 25% (identical to visible window even though window is hidden)
 
-  win.show();
+win.show();
 
-  // GPU usage: 25% (identical to visible window)
+// GPU usage: 25%
 
-  win.hide();
+win.hide();
 
-  // GPU usage: 0%
+// GPU usage: 0%
 ```
 
 
@@ -46,12 +46,12 @@ This is particularly an issue when an application has numerous windows that are 
 Calling `show()` and then `hide()` immediately after initializing a hidden window appears to result in the expected lower GPU/CPU usage.  Example:
 
 ```node
-  win = new BrowserWindow({
-    show: false,
-  });
+win = new BrowserWindow({
+  show: false,
+});
 
-  win.show();
-  win.hide();
+win.show();
+win.hide();
 ```
 
 I have some concerns that this could introduce some unexpected behavior or jank with windows momentarily appearing and then disappearing though.
