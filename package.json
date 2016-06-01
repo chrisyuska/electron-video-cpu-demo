@@ -1,20 +1,19 @@
 {
-  "name": "electron-video-cpu-demo",
-  "version": "0.1.2",
-  "description": "A small Electron app that demonstrates high cpu usage when playing video in hidden window until the window is shown and then hidden again",
+  "name": "electron-video-gpu-cpu-bug-demo",
+  "version": "0.1.3",
+  "description": "A small Electron app that demonstrates a bug where GPU/CPU usage is unexpectedly high when playing video in a hidden window until the window is shown and then hidden again",
   "main": "main.js",
   "scripts": {
     "start": "electron main.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chrisyuska/electron-video-cpu-demo"
+    "url": "git+https://github.com/chrisyuska/electron-video-gpu-cpu-bug-demo"
   },
   "author": "Chris Yuska <chrisyuska@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "electron-prebuilt": "1.1.1",
-    "os": "0.1.1",
     "pidusage": "1.0.1"
   }
 }

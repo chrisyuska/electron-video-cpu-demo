@@ -1,13 +1,29 @@
 # Electron Video GPU/CPU Bug Demo
 
-This is a small Electron app that demonstrates high(er) GPU/CPU usage when playing video in a hidden window until the window is shown and then hidden again.
+This is a small Electron app that demonstrates a bug where GPU/CPU usage is unexpectedly high when playing video in a hidden window until the window is shown and then hidden again. Example:
+
+```node
+  win = new BrowserWindow({
+    show: false,
+  });
+
+  // GPU usage: 25% (even though window is hidden)
+
+  win.show();
+
+  // GPU usage: 25% (identical to visible window)
+
+  win.hide();
+
+  // GPU usage: 0%
+```
 
 
 ## The problem:
 
 Animated elements (video tags, img tags with animated sources, etc.) in Electron BrowserWindows still tax the GPU (or CPU if graphics are embedded) when the BrowserWindow is initialized with the `{show: false}` option.
 
-This issue was discovered while creating an Electron app that does video processing on several videos at once.  This can result in several times higher GPU/CPU usage when the animated elements are larger in resolution or higher in frame rate.
+This is particularly an issue when an application has numerous windows that are initially hidden, as the GPU is taxed by all of them at once.
 
 
 ## How to reproduce:
@@ -21,16 +37,24 @@ This issue was discovered while creating an Electron app that does video process
 
 1. Install and run electron app with `npm install && npm start`
 2. Take note of the GPU/CPU usage in the console once the average levels out.
-3. Using the application's tray menu, click `Show application window` and then click `Hide application window`.
-  * **Note:** The tray menu will have the ![Icon](/assets/Icon_Video_tiny.png) icon and live in your task bar.
-4. Take note of the new GPU/CPU usage in the console once the average levels out again (it should be noticeably lower than in step 3).
+3. Right click on the ![Icon](/assets/Icon_Video_tiny.png) icon in the task bar, then click `Call show() then hide() on window` to cycle visibility.
+4. Take note of the new GPU/CPU usage in the console once the average levels out again. It should be noticeably lower than in step 3.
 
 
 ## Workaround
 
-Calling `hide()` immediately after initializing the window appears to result in the expected lower GPU/CPU usage.  This can be verified by running this electron app with `npm install && npm start hide-after`.
+Calling `show()` and then `hide()` immediately after initializing a hidden window appears to result in the expected lower GPU/CPU usage.  Example:
 
-Unfortunately, this can be sort of janky with windows momentarily appearing and then disappearing, especially when created dynamically.
+```node
+  win = new BrowserWindow({
+    show: false,
+  });
+
+  win.show();
+  win.hide();
+```
+
+I have some concerns that this could introduce some unexpected behavior or jank with windows momentarily appearing and then disappearing though.
 
 
 ## Tested with:

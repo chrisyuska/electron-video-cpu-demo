@@ -3,33 +3,25 @@
 const {app, Menu, Tray, BrowserWindow, ipcMain} = require('electron');
 const path = require('path');
 const usage = require('pidusage');
-const os = require('os');
 
-let mainWindow;
+let win;
 let appIcon;
+let contextMenu;
 let pid;
-let numCPUs;
 let usages = [];
 
 function createAppWindow () {
-  var hideAfter = process.argv.indexOf('hide-after') >= 0;
-  var showImmediately = process.argv.indexOf('show') >= 0;
-
-  if (hideAfter) {
-    console.log('Starting application and then hiding');
-  } else {
-    console.log('Starting application hidden');
-  }
+  console.log('Starting application hidden');
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1280,
     height: 720,
-    show: hideAfter || showImmediately,
+    show: false,
     autoHideMenuBar: true
   });
 
-  // Watch for pid information being sent from mainWindow and start tracking
+  // Watch for pid information being sent from win and start tracking
   // cpu usage for process
   ipcMain.on('set-pid', function(ev, newPid) {
     pid = newPid;
@@ -39,17 +31,11 @@ function createAppWindow () {
   });
 
   // Load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/index.html');
-
-  // if hide-after argument was passed to application, hide main window now
-  if (hideAfter) mainWindow.hide();
-
-  // Get number of CPUs/cores for calculating total memory usage
-  numCPUs = os.cpus().length;
+  win.loadURL('file://' + __dirname + '/index.html');
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    mainWindow = null;
+  win.on('closed', function() {
+    win = null;
   });
 }
 
@@ -65,7 +51,7 @@ function getCPUUsage() {
 // Calculate new running average and return rounded result
 function average(newUsage) {
   if (newUsage) {
-    usages.push(newUsage / numCPUs)
+    usages.push(newUsage)
     // limit average to last 20 recordings
     usages = usages.slice(-20);
   }
@@ -79,26 +65,42 @@ function average(newUsage) {
   return Math.round(sum * 100 / usages.length) / 100;
 }
 
+function showWindow() {
+  console.log('Showing application window');
+  usages = [];
+  win.show();
+}
+
+function hideWindow() {
+  console.log('Hiding application window');
+  usages = [];
+  win.hide();
+}
+
 // Initialize system tray for showing/hiding main window and quiting
 function initializeTray() {
   appIcon = new Tray(path.join(__dirname, '/assets/Icon_Video.png'));
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'Show Application Window',
+  contextMenu = Menu.buildFromTemplate([
+    { label: 'Call show() then hide() on window',
       type: 'normal',
-      enabled: !mainWindow || !mainWindow.isVisible(),
+      enabled: true,
       click: function() {
-        console.log('Showing application window');
-        usages = [];
-        mainWindow.show();
+        showWindow();
+        hideWindow();
       }
     },
-    { label: 'Hide Application Window',
+    { label: 'Call show() on window',
       type: 'normal',
-      enabled: mainWindow && mainWindow.isVisible(),
+      enabled: true,
       click: function() {
-        console.log('Hiding application window');
-        usages = [];
-        mainWindow.hide();
+        showWindow();
+      }
+    },
+    { label: 'Call hide() on window',
+      type: 'normal',
+      enabled: true,
+      click: function() {
+        hideWindow();
       }
     },
     { type: 'separator' },
@@ -116,8 +118,8 @@ function initializeTray() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function () {
-  initializeTray();
   createAppWindow();
+  initializeTray();
 });
 
 // Quit when all windows are closed.
@@ -132,7 +134,7 @@ app.on('window-all-closed', function () {
 app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+  if (win === null) {
     createAppWindow();
   }
 });
