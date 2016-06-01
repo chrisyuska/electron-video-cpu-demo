@@ -35,7 +35,7 @@ This is particularly an issue when an application has numerous windows that are 
 
 ### Steps:
 
-1. Install and run electron app with `npm install && npm start`
+1. Install and run the electron app with `npm install && npm start`.
 2. Take note of the GPU/CPU usage in the console once the average levels out.
 3. Right click on the ![Icon](/assets/Icon_Video_tiny.png) icon in the task bar, then click `Call show() then hide() on window` to cycle visibility.
 4. Take note of the new GPU/CPU usage in the console once the average levels out again. It should be noticeably lower than in step 3.
