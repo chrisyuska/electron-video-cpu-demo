@@ -54,19 +54,21 @@ win.show();
 win.hide();
 ```
 
-I have some concerns that this could introduce some unexpected behavior or jank with windows momentarily appearing and then disappearing though.
+Unfortunately, this can introduce some unexpected behavior or jank with windows momentarily appearing and then disappearing.
 
 
 ## Tested with:
 
 1. Ubuntu 14.04, 32-bit
-  * Electron v1.1.1
+  * Electron v1.2.1
   * CPU: Intel Core i5-2557M CPU @ 1.70GHz × 4
   * GPU: Intel Sandybridge Mobile x86/MMX/SSE2
   * Status: **Affected**
+  * Performance change: 80% -> 50% CPU usage
 
 2. Windows 7, 64-bit
-  * Electron v1.1.1
+  * Electron v1.2.1
   * CPU: Intel Core i7-3770K CPU @ 3.50GHz × 4
   * GPU: AMD Radeon HD 7900 Series
   * Status: **Affected**
+  * Performance change: 5% -> 0% GPU usage
